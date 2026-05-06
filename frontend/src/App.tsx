@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Home, MessageSquare, PieChart, User, Settings, Menu, X, Leaf } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import ChatAssistant from './pages/ChatAssistant';

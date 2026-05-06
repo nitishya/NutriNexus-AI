@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Save, User, Shield, Activity, Target } from 'lucide-react';
+import { Save, User, Shield, Target } from 'lucide-react';
 import { createProfile } from '../services/api';
 
 const Profile = () => {

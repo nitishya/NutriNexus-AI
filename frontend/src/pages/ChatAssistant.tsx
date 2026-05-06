@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, User, Bot, Sparkles } from 'lucide-react';
 import { askAssistant } from '../services/api';

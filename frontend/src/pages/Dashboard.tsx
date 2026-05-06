@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Zap, Target, AlertCircle, PlusCircle } from 'lucide-react';
 import { getRecommendation } from '../services/api';

@@ -35,7 +35,11 @@ profiles_db = {}
 meal_logs_db = {}
 
 # Serve Frontend static files
-frontend_dist = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../frontend/dist")
+base_dir = os.path.dirname(os.path.abspath(__file__))
+# Check Docker path first (/app/frontend/dist), then local path (../frontend/dist)
+frontend_dist = os.path.join(base_dir, "frontend/dist")
+if not os.path.isdir(frontend_dist):
+    frontend_dist = os.path.join(base_dir, "../frontend/dist")
 
 if os.path.isdir(os.path.join(frontend_dist, "assets")):
     app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")

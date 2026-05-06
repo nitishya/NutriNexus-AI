@@ -30,6 +30,14 @@ app.add_middleware(
 profiles_db = {}
 meal_logs_db = {}
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to NutriNexus AI Backend!",
+        "docs_url": "/docs",
+        "status": "active"
+    }
+
 @app.post("/user/profile", response_model=UserProfile)
 @limiter.limit("5/minute")
 async def create_profile(profile: UserProfile, request: Request):

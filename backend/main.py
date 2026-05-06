@@ -26,17 +26,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 # Mock DB (In production, use Firestore)
 profiles_db = {}
 meal_logs_db = {}
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Welcome to NutriNexus AI Backend!",
-        "docs_url": "/docs",
-        "status": "active"
-    }
+# Serve Frontend static files
+frontend_dist = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../frontend/dist")
+
+if os.path.isdir(os.path.join(frontend_dist, "assets")):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+
+
 
 @app.post("/user/profile", response_model=UserProfile)
 @limiter.limit("5/minute")
@@ -78,6 +82,23 @@ async def ask_assistant(chat_req: ChatRequest, request: Request):
 @app.get("/health", response_model=HealthStatus)
 async def health_check():
     return HealthStatus(status="healthy")
+
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    # If the requested path is an API endpoint, let it pass through (FastAPI handles it before this catch-all if defined above)
+    # Actually, catch-all at the bottom intercepts everything. We must ensure this is the LAST route.
+    
+    # Check if the exact file exists in dist (e.g. favicon.ico)
+    if full_path and full_path != "/":
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+    # Default to index.html for SPA routing
+    index_path = os.path.join(frontend_dist, "index.html")
+    if os.path.isfile(index_path):
+        return FileResponse(index_path)
+    return {"message": "Welcome to NutriNexus AI Backend (Frontend not built yet)", "docs": "/docs"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
